@@ -81,7 +81,8 @@ class Index extends React.Component{
                                         }
                                     ]
                                 })(
-                                <Input prefix={<Icon type="user"/>} placeholder="请输入用户名(admin/storekeeper/producer/operator)" />
+                                <Input prefix={<Icon type="user"/>} placeholder="请输入用户名(admin/storekeeper/producer/operator)"
+                                       style={{marginTop: '20px'}} />
                                 )
                             }
                         </FormItem>
@@ -94,21 +95,11 @@ class Index extends React.Component{
                                         message:'密码不可为空'
                                     }]
                                 })(
-                                    <Input prefix={<Icon type="lock"/>} placeholder="请输入密码(123456)"/>
+                                    <Input prefix={<Icon type="lock"/>} placeholder="请输入密码(123456)"
+                                           style={{marginTop: '15px',marginBottom: '12px'}} />
                                 )
                             }
 
-                        </FormItem>
-                        <FormItem>
-                            {
-                                getFieldDecorator('remember',{
-                                    valuePropName:'checked',
-                                    initialValue:true,
-                                })(
-                                    <Checkbox style={{float:'left'}}>记住密码</Checkbox>
-                                )
-                            }
-                            <a href="#" style={{float:'right'}}>忘记密码</a>
                         </FormItem>
                         <FormItem>
                             <Button className={"layout2"} type="primary" htmlType={"submit"} >登录</Button>

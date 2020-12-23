@@ -1,24 +1,30 @@
 const menuList = [
     {
-        title:'首页',
-        key:'/admin/home'
+        title: '园区管理',
+        children: [
+          {
+            title:'企业信息管理',
+            key: '/admin/enterprise'
+          },
+          {
+            title:'生产线信息管理',
+            key: '/admin/production_line'
+          },
+          {
+            title:'仓库信息管理',
+            key: '/admin/store'
+          }
+        ]
     },
     {
-        title:'企业信息管理',
-        key: '/admin/enterprise'
-    },
-    {
-        title:'生产线信息管理',
-        key: '/admin/production_line'
-    },
-    {
-        title:'仓库信息管理',
-        key: '/admin/store'
-    },
-    {
-        title:'用户信息管理',
-        key: '/admin/user'
-    },
+        title: '用户管理',
+        children: [
+          {
+            title:'用户信息管理',
+            key: '/admin/user'
+          }
+        ]
+    }
     /*{
         title:'实体信息管理',
         key: '/admin/entity'
