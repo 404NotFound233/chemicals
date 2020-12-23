@@ -12,7 +12,7 @@ export default class AdminHome extends React.Component {
     render() {
         return(
             <div className={"home-wrap"}>
-                <Result icon={<Icon type={"smile"} theme={"twoTone"}/>} title={`管理员，你好！欢迎进入${systemName}。`} subTitle={"左侧是你的功能列表"}/>
+                <Result icon={<Icon type={"smile"} theme={"twoTone"}/>} title={`管理员，你好！欢迎进入${systemName}。`} subTitle={"左侧是你的功能列表，右上角退出登录"}/>
             </div>
         )
     }

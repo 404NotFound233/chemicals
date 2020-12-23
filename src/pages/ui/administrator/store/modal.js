@@ -97,7 +97,7 @@ class StoreModal extends React.Component{
                                     message: '请输入仓库名称!',
                                 },
                             ],
-                        })(<Input />)}
+                        })(<Input placeholder="请保证仓库名称的唯一性" />)}
                     </Form.Item>
                     <Form.Item label="所属企业">
                         {getFieldDecorator('enterpriseId', {

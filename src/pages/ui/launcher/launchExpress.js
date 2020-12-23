@@ -119,7 +119,7 @@ class LaunchExpress extends React.Component {
                 return;
             const expressVO = res.data;
             if (expressVO.code === 1) {
-                message.success('本次物流发起成功');
+                message.success('本次物流发起成功，本次单号：' + expressVO.expressId);
                 // todo:
                 this.setState({
                     storeOut: 0,

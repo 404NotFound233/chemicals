@@ -76,6 +76,13 @@ class Store extends React.Component{
     add = store => {
         this.setState({ confirmLoading: true });
         console.log(store);
+        for (let i=0; i< this.state.storeList.length; ++i) {
+            if (this.state.storeList[i]['name'] === store['name']) {
+                message.error('仓库名称重复了！');
+                this.setState({ confirmLoading: false, additionModalVisible: false });
+                return;
+            }
+        }
         /*
         axios({
             method: 'post',
