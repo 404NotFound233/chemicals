@@ -176,7 +176,7 @@ class Destroy extends React.Component {
         const { batchId, scanLoading, scannedProducts, allCompleted } = this.state;
         const begin = batchId !== 0;
         return (
-            <Card title={'销毁'}>
+            <Card title={'执行销毁'}>
                 { !begin ? (
                     <Form layout={"inline"} onSubmit={this.handleSubmit}>
                         <Form.Item label={'销毁批次'}>

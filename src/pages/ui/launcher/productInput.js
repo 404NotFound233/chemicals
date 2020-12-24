@@ -108,6 +108,7 @@ export default class ProductInput extends React.Component {
                     style={{ width: '10%', marginRight: 8 }}
                     onChange={this.handleNumChange}
                 />
+                份
             </span>
         );
     }

@@ -5,6 +5,7 @@ import ExpressNumInputForm from "./expressNumInputForm";
 import ExpressStoreSelectForm from "./expressStoreSelectForm";
 import {checkTokenExpiration, get, post} from "../../../request";
 import {backend_url} from "../../../config/httpRequest1";
+import {Modal} from "antd";
 
 const storeUrl = backend_url + 'store/';
 const expressUrl = backend_url + 'express/';
@@ -84,57 +85,68 @@ class LaunchExpress extends React.Component {
     };
 
     handleSubmit = () => {
-        const { storeOut, storeIn, expressNum } = this.state;
-        /*axios({
-            method: 'post',
-            url: expressUrl + 'create_express',
-            data: {
-                inputStoreId: storeIn,
-                outputStoreId: storeOut,
-                productNumberMap: expressNum
-            }
-        }).then(function (res) {
-            const expressVO = res.data.data;
-            if (expressVO.code === 1) {
-                message.success('本次物流发起成功');
-                this.setState({
-                    storeOut: 0,
-                    storeIn: 0,
-                    selectedRowKeys: [],
-                    expressNum: {},
-                    allProducts: []
-                })
-            } else {
-                message.error('服务器繁忙，请稍后重试');
-            }
-        }.bind(this)).catch(function (err) {
-            console.log(err)
-        });*/
-        post(expressUrl + 'create_express', {
+      const that = this;
+      Modal.confirm({
+        title: '提交确认',
+        content: '本次提交无法撤回，是否确认提交？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          const { storeOut, storeIn, expressNum } = that.state;
+            /*axios({
+             method: 'post',
+             url: expressUrl + 'create_express',
+             data: {
+             inputStoreId: storeIn,
+             outputStoreId: storeOut,
+             productNumberMap: expressNum
+             }
+             }).then(function (res) {
+             const expressVO = res.data.data;
+             if (expressVO.code === 1) {
+             message.success('本次物流发起成功');
+             this.setState({
+             storeOut: 0,
+             storeIn: 0,
+             selectedRowKeys: [],
+             expressNum: {},
+             allProducts: []
+             })
+             } else {
+             message.error('服务器繁忙，请稍后重试');
+             }
+             }.bind(this)).catch(function (err) {
+             console.log(err)
+             });*/
+          post(expressUrl + 'create_express', {
             inputStoreId: storeIn,
             outputStoreId: storeOut,
             productNumberMap: expressNum
-        }).then(function (res) {
-            if (checkTokenExpiration(res, this.props.history))
-                return;
+          }).then(function (res) {
+            if (checkTokenExpiration(res, that.props.history))
+              return;
             const expressVO = res.data;
             if (expressVO.code === 1) {
-                message.success('本次物流发起成功，本次单号：' + expressVO.expressId);
-                // todo:
-                this.setState({
-                    storeOut: 0,
-                    storeIn: 0,
-                    selectedRowKeys: [],
-                    expressNum: {},
-                    allProducts: []
-                })
+              message.success('本次物流发起成功，本次单号：' + expressVO.expressId);
+              // todo:
+              that.setState({
+                storeOut: 0,
+                storeIn: 0,
+                selectedRowKeys: [],
+                expressNum: {},
+                allProducts: []
+              })
             } else {
-                message.error(expressVO.message);
+              message.error(expressVO.message);
             }
-        }.bind(this)).catch(function (err) {
+          }.bind(that)).catch(function (err) {
             console.log(err);
             console.log(err.response);
-        });
+          });
+        },
+        onCancel: () => {
+        },
+      });
     };
 
     render() {

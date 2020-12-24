@@ -5,6 +5,7 @@ import {withRouter} from "react-router";
 import RawInput from "./rawInput";
 import {checkTokenExpiration, get, post} from "../../../request";
 import {backend_url} from "../../../config/httpRequest1";
+import {Modal} from "antd";
 
 const baseUrl = backend_url + 'batch/';
 const productionLineUrl = backend_url + 'production_line/';
@@ -107,54 +108,65 @@ class LaunchProduction extends React.Component{
     };
 
     handleSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+      const that = this;
+      Modal.confirm({
+        title: '提交确认',
+        content: '本次提交无法撤回，是否确认提交？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          e.preventDefault();
+          that.props.form.validateFields((err, values) => {
             if (!err) {
-                const { productionLineId, keys, raw } = values;
-                console.log('Received values of form: ', values);
-                if (keys.length === 0) {
-                    message.error('请添加原料!');
-                    return;
-                }
-                const data = {
-                    type: 0,
-                    productionLineId,
-                    raws: keys.map(key => {
-                        const { store, product, num } = raw[key];
-                        return { productId: product, storeId: store, number: num };
-                    })
-                };
-                console.log(data);
+              const { productionLineId, keys, raw } = values;
+              console.log('Received values of form: ', values);
+              if (keys.length === 0) {
+                message.error('请添加原料!');
+                return;
+              }
+              const data = {
+                type: 0,
+                productionLineId,
+                raws: keys.map(key => {
+                  const { store, product, num } = raw[key];
+                  return { productId: product, storeId: store, number: num };
+                })
+              };
+              console.log(data);
                 /*axios({
-                    method: 'post',
-                    url: baseUrl + 'create_batch',
-                    data
-                }).then(function (res) {
-                    const batchVO = res.data;
-                    if (batchVO.code === 0) {
-                        console.log('create batch failed')
-                    } else if (batchVO.code === 1) {
-                        message.success('本次生产发起成功，请尽快完成原料出库')
-                        // todo: 清空页面
-                    }
-                }).catch(function (err) {
-                    console.log(err)
-                });*/
-                post(baseUrl + 'create_batch', data).then(function (res) {
-                    if (checkTokenExpiration(res, this.props.history))
-                        return;
-                    const batchVO = res.data;
-                    if (batchVO.code === 0) {
-                        console.log('create batch failed')
-                    } else if (batchVO.code === 1) {
-                        message.success('本次生产发起成功，请尽快完成原料出库')
-                        // todo: 清空页面
-                    }
-                }.bind(this)).catch(function (err) {
-                    console.log(err)
-                });
+                 method: 'post',
+                 url: baseUrl + 'create_batch',
+                 data
+                 }).then(function (res) {
+                 const batchVO = res.data;
+                 if (batchVO.code === 0) {
+                 console.log('create batch failed')
+                 } else if (batchVO.code === 1) {
+                 message.success('本次生产发起成功，请尽快完成原料出库')
+                 // todo: 清空页面
+                 }
+                 }).catch(function (err) {
+                 console.log(err)
+                 });*/
+              post(baseUrl + 'create_batch', data).then(function (res) {
+                if (checkTokenExpiration(res, that.props.history))
+                  return;
+                const batchVO = res.data;
+                if (batchVO.code === 0) {
+                  console.log('create batch failed')
+                } else if (batchVO.code === 1) {
+                  message.success('本次生产发起成功，请尽快完成原料出库')
+                  // todo: 清空页面
+                }
+              }.bind(that)).catch(function (err) {
+                console.log(err)
+              });
             }
-        });
+          });
+        },
+        onCancel() {
+        },
+      });
     };
 
     render() {

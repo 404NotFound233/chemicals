@@ -4,6 +4,7 @@ import OutParkInput from "./outParkInput";
 import {withRouter} from "react-router";
 import {checkTokenExpiration, get, post} from "../../../request";
 import {backend_url} from "../../../config/httpRequest1";
+import {Modal} from 'antd';
 
 const baseUrl = backend_url + 'batch/';
 const productionLineUrl = backend_url + 'production_line/';
@@ -32,80 +33,91 @@ class LaunchOutPark extends React.Component{
     };
 
     handleSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+      const that = this;
+      Modal.confirm({
+        title: '提交确认',
+        content: '本次提交无法撤回，是否确认提交？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          e.preventDefault();
+          that.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values);
-                const { store, product, num, enterpriseId } = values['outParkProduct'];
+              console.log(values);
+              const { store, product, num, enterpriseId } = values['outParkProduct'];
                 /*
-                axios({
-                    method: 'get',
-                    url: productionLineUrl + 'get_out_park_by_eid/' + enterpriseId
-                }).then(function (res) {
-                    const productionLineVO = res.data;
-                    if (productionLineVO.code === 0) {
-                        message.error('禁止从该仓库出园');
-                    } else if (productionLineVO.code === 1) {
-                        const productionLineId = productionLineVO.productionLineId;
-                        const data = {
-                            type: 2,
-                            productionLineId,
-                            raws: [{ productId: product, storeId: store, number: num }]
-                        };
-                        axios({
-                            method: 'post',
-                            url: baseUrl + 'create_batch',
-                            data
-                        }).then(function (res) {
-                            const batchVO = res.data;
-                            if (batchVO.code === 0) {
-                                console.log('create batch failed')
-                            } else if (batchVO.code === 1) {
-                                message.success('本次出园发起成功，请尽快完成出园操作')
-                                // todo: 清空页面
-                            }
-                        }).catch(function (err) {
-                            console.log(err)
-                        });
-                    }
-                }).catch(function (err) {
-                    console.log(err);
-                    message.error('未查询到该仓库');
-                });
+                 axios({
+                 method: 'get',
+                 url: productionLineUrl + 'get_out_park_by_eid/' + enterpriseId
+                 }).then(function (res) {
+                 const productionLineVO = res.data;
+                 if (productionLineVO.code === 0) {
+                 message.error('禁止从该仓库出园');
+                 } else if (productionLineVO.code === 1) {
+                 const productionLineId = productionLineVO.productionLineId;
+                 const data = {
+                 type: 2,
+                 productionLineId,
+                 raws: [{ productId: product, storeId: store, number: num }]
+                 };
+                 axios({
+                 method: 'post',
+                 url: baseUrl + 'create_batch',
+                 data
+                 }).then(function (res) {
+                 const batchVO = res.data;
+                 if (batchVO.code === 0) {
+                 console.log('create batch failed')
+                 } else if (batchVO.code === 1) {
+                 message.success('本次出园发起成功，请尽快完成出园操作')
+                 // todo: 清空页面
+                 }
+                 }).catch(function (err) {
+                 console.log(err)
+                 });
+                 }
+                 }).catch(function (err) {
+                 console.log(err);
+                 message.error('未查询到该仓库');
+                 });
 
                  */
 
-                get(productionLineUrl + 'get_out_park_by_eid/' + enterpriseId).then(function (res) {
-                    if (checkTokenExpiration(res, this.props.history))
-                        return;
-                    const productionLineVO = res.data;
-                    if (productionLineVO.code === 0) {
-                        message.error('禁止从该仓库出园');
-                    } else if (productionLineVO.code === 1) {
-                        const productionLineId = productionLineVO.productionLineId;
-                        const data = {
-                            type: 2,
-                            productionLineId,
-                            raws: [{ productId: product, storeId: store, number: num }]
-                        };
-                        post(baseUrl + 'create_batch', data).then(function (res) {
-                            const batchVO = res.data;
-                            if (batchVO.code === 0) {
-                                console.log('create batch failed')
-                            } else if (batchVO.code === 1) {
-                                message.success('本次出园发起成功，请尽快完成出园操作')
-                                // todo: 清空页面
-                            }
-                        }).catch(function (err) {
-                            console.log(err)
-                        });
+              get(productionLineUrl + 'get_out_park_by_eid/' + enterpriseId).then(function (res) {
+                if (checkTokenExpiration(res, that.props.history))
+                  return;
+                const productionLineVO = res.data;
+                if (productionLineVO.code === 0) {
+                  message.error('禁止从该仓库出园');
+                } else if (productionLineVO.code === 1) {
+                  const productionLineId = productionLineVO.productionLineId;
+                  const data = {
+                    type: 2,
+                    productionLineId,
+                    raws: [{ productId: product, storeId: store, number: num }]
+                  };
+                  post(baseUrl + 'create_batch', data).then(function (res) {
+                    const batchVO = res.data;
+                    if (batchVO.code === 0) {
+                      console.log('create batch failed')
+                    } else if (batchVO.code === 1) {
+                      message.success('本次出园发起成功，请尽快完成出园操作')
+                      // todo: 清空页面
                     }
-                }.bind(this)).catch(function (err) {
-                    console.log(err);
-                    message.error('未查询到该仓库');
-                });
+                  }).catch(function (err) {
+                    console.log(err)
+                  });
+                }
+              }.bind(that)).catch(function (err) {
+                console.log(err);
+                message.error('未查询到该仓库');
+              });
             }
-        });
+          });
+        },
+        onCancel() {
+        },
+      });
     };
 
     render() {

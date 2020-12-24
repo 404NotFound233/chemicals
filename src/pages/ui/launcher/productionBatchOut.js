@@ -5,6 +5,7 @@ import {withRouter} from "react-router";
 import ProductInput from "../launcher/productInput";
 import {checkTokenExpiration, get, post} from "../../../request";
 import {backend_url} from "../../../config/httpRequest1";
+import {Modal} from "antd";
 
 const batchUrl = backend_url + 'batch/';
 const productionLineUrl = backend_url + 'production_line/';
@@ -128,55 +129,65 @@ class ProductionBatchOut extends React.Component{
     };
 
     handleSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+      const that = this;
+      Modal.confirm({
+        title: '提交确认',
+        content: '本次提交无法撤回，是否确认提交？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          e.preventDefault();
+          that.props.form.validateFields((err, values) => {
             if (!err) {
-                const { batchId, keys, product } = values;
-                console.log('Received values of form: ', values);
-                console.log('batchId: ', batchId);
-                if (keys.length === 0) {
-                    message.error('请添加该批次生产的产品!');
-                    return;
-                }
-                console.log('Merged values:', keys.map(key => product[key]));
-                const batchOutRequest = {
-                    batchId,
-                    products: keys.map(key => {
-                        const { casId, store, num } = product[key];
-                        return { casId, storeId: store, number: num };
-                    })
-                };
+              const { batchId, keys, product } = values;
+              console.log('Received values of form: ', values);
+              console.log('batchId: ', batchId);
+              if (keys.length === 0) {
+                message.error('请添加该批次生产的产品!');
+                return;
+              }
+              console.log('Merged values:', keys.map(key => product[key]));
+              const batchOutRequest = {
+                batchId,
+                products: keys.map(key => {
+                  const { casId, store, num } = product[key];
+                  return { casId, storeId: store, number: num };
+                })
+              };
                 /*
-                axios({
-                    method: 'post',
-                    url: batchUrl + 'batch_out',
-                    data: batchOutRequest
-                }).then(function (res) {
-                    const batchVO = res.data;
-                    if (batchVO.code === 0) {
-                        console.log('batch out failed')
-                    } else if (batchVO.code === 1) {
-                        message.success('本次生产的产品已成功记录，请尽快完成产品入库')
-                        // todo: 清空页面
-                    }
-                }).catch(function (err) {
-                    console.log(err)
-                });
-                */
-                post(batchUrl + 'batch_out', batchOutRequest).then(function (res) {
-                    if (checkTokenExpiration(res, this.props.history))
-                        return;
-                    const batchVO = res.data;
-                    if (batchVO.code === 0) {
-                        console.log('batch out failed')
-                    } else if (batchVO.code === 1) {
-                        message.success('本次生产的产品已成功记录，请尽快完成产品入库')
-                        // todo: 清空页面
-                    }
-                }.bind(this)).catch(function (err) {
-                    console.log(err)
-                });
+                 axios({
+                 method: 'post',
+                 url: batchUrl + 'batch_out',
+                 data: batchOutRequest
+                 }).then(function (res) {
+                 const batchVO = res.data;
+                 if (batchVO.code === 0) {
+                 console.log('batch out failed')
+                 } else if (batchVO.code === 1) {
+                 message.success('本次生产的产品已成功记录，请尽快完成产品入库')
+                 // todo: 清空页面
+                 }
+                 }).catch(function (err) {
+                 console.log(err)
+                 });
+                 */
+              post(batchUrl + 'batch_out', batchOutRequest).then(function (res) {
+                if (checkTokenExpiration(res, that.props.history))
+                  return;
+                const batchVO = res.data;
+                if (batchVO.code === 0) {
+                  console.log('batch out failed')
+                } else if (batchVO.code === 1) {
+                  message.success('本次生产的产品已成功记录，请尽快完成产品入库')
+                  // todo: 清空页面
+                }
+              }.bind(that)).catch(function (err) {
+                console.log(err)
+              });
             }
+          });
+        },
+        onCancel: () => {},
         });
     };
 

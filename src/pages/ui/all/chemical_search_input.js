@@ -10,7 +10,7 @@ const { Option } = Select;
 let timeout;
 let currentSearchText;
 
-function fetch(searchText, callback, getHistory) {
+function fetch(searchText, callback, getHistory,that) {
     if (timeout) {
         clearTimeout(timeout);
         timeout = null;
@@ -56,6 +56,10 @@ function fetch(searchText, callback, getHistory) {
                     const { casId, name } = cas;
                     casList.push({ casId, name });
                 });
+                if (casList.length === 1 && casList[0].name === searchText) {
+                const { onChange } = that.props;
+                onChange(searchText);
+                }
                 callback(casList);
             }
         }).catch(function (err) {
@@ -88,7 +92,7 @@ export default class ChemicalSearchInput extends React.Component{
     handleSearch = searchText => {
         if (searchText && searchText.length > 0) {
             const { getHistory } = this.props;
-            fetch(searchText, casList => this.setState({ casList }), getHistory);
+            fetch(searchText, casList => this.setState({ casList }), getHistory, this);
         } else {
             const { initialCasList } = this.state;
             this.setState({ casList: initialCasList });

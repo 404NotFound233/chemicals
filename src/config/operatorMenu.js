@@ -11,7 +11,7 @@ const menuList = [
             key: '/operator/in_park'
           },
           {
-            title:'出园',
+            title:'执行出园',
             key: '/operator/out_park'
           },
         ]
@@ -45,7 +45,7 @@ const menuList = [
             key: '/operator/launch_destroy'
           },
           {
-            title:'销毁',
+            title:'执行销毁',
             key: '/operator/destroy'
           }
         ]

@@ -176,7 +176,7 @@ class OutPark extends React.Component {
         const { batchId, scanLoading, scannedProducts, allCompleted } = this.state;
         const begin = batchId !== 0;
         return (
-            <Card title={'出园'}>
+            <Card title={'执行出园'}>
                 { !begin ? (
                     <Form layout={"inline"} onSubmit={this.handleSubmit}>
                         <Form.Item label={'出园批次'}>

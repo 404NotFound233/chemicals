@@ -178,11 +178,12 @@ export default class RawInput extends React.Component {
                     value={value.num}
                     style={{ width: '10%' }}
                     onChange={this.handleNumChange}
-                />/
+                />&nbsp;&nbsp;/&nbsp;&nbsp;
                 <InputNumber
                     value={maxNum} disabled
                     style={{ width: '5%', marginRight: 8 }}
                 />
+                份
             </span>
         );
     }
