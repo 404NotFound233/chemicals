@@ -47,12 +47,12 @@ class BatchInfo extends React.Component{
             if (checkTokenExpiration(res, this.props.history))
                 return;
             const data = res;
-            console.log(data);
+            console.log('data', data);
             if (data['code'] !== 200) {
                 message.error(data['msg']);
                 that.setState({ searchLoading: false });
             }
-            else if (data['data']['raws']['links'].length == 0) {
+            else if (data['data']['products']['links'].length == 0 && data['data']['raws']['links'].length == 0) {
               message.error('暂无相关批次信息！');
               that.setState({ searchLoading: false });
             }
@@ -138,7 +138,8 @@ class BatchInfo extends React.Component{
                             color: 'source',
                             curveness: 0.5
                         }
-                    }
+                    },
+                    nodeGap: 20
                 }
             ]
         };

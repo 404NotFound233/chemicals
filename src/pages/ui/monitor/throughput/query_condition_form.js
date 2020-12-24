@@ -1,7 +1,7 @@
 import React from "react";
-import {Button, DatePicker, Form, InputNumber, message, Select} from "antd";
-import {checkTokenExpiration, post} from "../../../../request";
-import {backend_url} from "../../../../config/httpRequest1";
+import { Button, DatePicker, Form, InputNumber, message, Select } from "antd";
+import { checkTokenExpiration, post } from "../../../../request";
+import { backend_url } from "../../../../config/httpRequest1";
 
 import moment from "moment";
 import "moment/locale/zh-cn";
@@ -14,13 +14,13 @@ const { Option } = Select;
 
 const baseUrl = backend_url + 'throughput/';
 
-const ENTITY_TYPES = [ '园区', '企业', '生产线', '仓库' ];
+const ENTITY_TYPES = ['园区', '企业', '生产线', '仓库'];
 
-const TIME_TYPES = [ '年', '季度', '月', '日' ];
+const TIME_TYPES = ['年', '季度', '月', '日'];
 
-const INITIAL_VALUES = [ undefined, { year: undefined, quarter: undefined }, undefined, undefined];
+const INITIAL_VALUES = [undefined, { year: undefined, quarter: undefined }, undefined, undefined];
 
-class QueryConditionForm extends React.Component{
+class QueryConditionForm extends React.Component {
 
     state = { queryLoading: false };
 
@@ -28,7 +28,7 @@ class QueryConditionForm extends React.Component{
         const { getFieldValue } = this.props.form;
         const entityType = getFieldValue('entityType');
         const entityName = ENTITY_TYPES[entityType];
-        if ( value.length === 0 ) {
+        if (value.length === 0) {
             return callback(`请输入${entityName}id`);
         }
         if (!/^\d+$/.test(value)) {
@@ -51,7 +51,7 @@ class QueryConditionForm extends React.Component{
         }
 
         const endOptions = [];
-        for (let year = (start ? start: minYear); year <= maxYear; year++) {
+        for (let year = (start ? start : minYear); year <= maxYear; year++) {
             endOptions.push(<Option value={year} key={year}>{year}</Option>)
         }
 
@@ -59,7 +59,8 @@ class QueryConditionForm extends React.Component{
             (
                 <Form.Item key={0}>
                     {getFieldDecorator('start', {
-                        rules: [{ required: true, message: '请选择开始年份！' }]
+                        rules: [{ required: true, message: '请选择开始年份！' }],
+                        initialValue: 2020
                     })(<Select style={{ width: 120 }} placeholder={'开始年份'} firstActiveValue={'' + maxY}>
                         {startOptions}
                     </Select>)}
@@ -68,7 +69,8 @@ class QueryConditionForm extends React.Component{
             (
                 <Form.Item key={1}>
                     {getFieldDecorator('end', {
-                        rules: [{ required: true, message: '请选择结束年份！' }]
+                        rules: [{ required: true, message: '请选择结束年份！' }],
+                        initialValue: 2020
                     })(<Select style={{ width: 120 }} placeholder={'结束年份'} firstActiveValue={'' + maxYear}>
                         {endOptions}
                     </Select>)}
@@ -140,7 +142,7 @@ class QueryConditionForm extends React.Component{
 
         return [
             (
-                <Form.Item key={0} label={'开始季度'} style={{width: 250}}>
+                <Form.Item key={0} label={'开始季度'} style={{ width: 250 }}>
                     {getFieldDecorator('start', {
                         rules: [{ validator: checkStart }]
                     })(<QuarterSelector
@@ -152,7 +154,7 @@ class QueryConditionForm extends React.Component{
                 </Form.Item>
             ),
             (
-                <Form.Item key={1} label={'结束季度'} style={{width: 250}}>
+                <Form.Item key={1} label={'结束季度'} style={{ width: 250 }}>
                     {getFieldDecorator('end', {
                         rules: [{ validator: checkEnd }]
                     })(<QuarterSelector
@@ -195,14 +197,14 @@ class QueryConditionForm extends React.Component{
             (
                 <Form.Item key={0}>
                     {getFieldDecorator('start', {
-                        rules: [{ type: 'object', required: true, message: '请选择开始月份!'}]
+                        rules: [{ type: 'object', required: true, message: '请选择开始月份!' }]
                     })(<MonthPicker placeholder={'开始月份'} disabledDate={disabledStart} />)}
                 </Form.Item>
             ),
             (
                 <Form.Item key={1}>
                     {getFieldDecorator('end', {
-                        rules: [{ type: 'object', required: true, message: '请选择结束月份!'}]
+                        rules: [{ type: 'object', required: true, message: '请选择结束月份!' }]
                     })(<MonthPicker placeholder={'结束月份'} disabledDate={disabledEnd} />)}
                 </Form.Item>
             )
@@ -238,14 +240,14 @@ class QueryConditionForm extends React.Component{
             (
                 <Form.Item key={0}>
                     {getFieldDecorator('start', {
-                        rules: [{ type: 'object', required: true, message: '请选择开始日期!'}]
+                        rules: [{ type: 'object', required: true, message: '请选择开始日期!' }]
                     })(<DatePicker placeholder={'开始日期'} disabledDate={disabledStart} />)}
                 </Form.Item>
             ),
             (
                 <Form.Item key={1}>
                     {getFieldDecorator('end', {
-                        rules: [{ type: 'object', required: true, message: '请选择结束日期!'}]
+                        rules: [{ type: 'object', required: true, message: '请选择结束日期!' }]
                     })(<DatePicker placeholder={'结束日期'} disabledDate={disabledEnd} />)}
                 </Form.Item>
             )
@@ -293,7 +295,7 @@ class QueryConditionForm extends React.Component{
             if (!err) {
                 this.setState({ queryLoading: true });
 
-                const { entityType, entityId, timeType, start, end ,casId } = values;
+                const { entityType, entityId, timeType, start, end, casId } = values;
 
                 const queryRequest = { entityType, entityId, timeType };
 
